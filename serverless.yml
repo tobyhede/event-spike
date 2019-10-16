@@ -1,0 +1,43 @@
+
+service: event-spike
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: dev
+  region: ap-southeast-2
+
+functions:
+  sqs:
+    handler: sqs.handler
+    reservedConcurrency: 1
+    events:
+      - sqs:
+        arn:
+          Fn::GetAtt:
+            - Stream
+            - Arn
+        batchSize: 1
+  kinesis:
+    handler: kinesis.handler
+    reservedConcurrency: 1
+    events:
+      - stream:
+          type: kinesis
+          arn:
+            Fn::GetAtt:
+              - Stream
+              - Arn
+
+resources:
+  Resources:
+    Stream:
+      Type: AWS::Kinesis::Stream
+      Properties:
+        Name: event-spike-kinesis-${self:provider.stage}
+        ShardCount: 1
+
+    Queue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName:  event-spike-sqs-${self:provider.stage}
