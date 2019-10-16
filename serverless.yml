@@ -28,6 +28,13 @@ functions:
             Fn::GetAtt:
               - Stream
               - Arn
+  pause:
+    handler: pause.handler
+    events:
+      - http:
+          path: /{fn}/pause
+          method: get
+
 
 resources:
   Resources:

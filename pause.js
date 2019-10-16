@@ -1,19 +1,38 @@
+'use strict';
+
 const AWS = require('aws-sdk');
 
 AWS.config.update({region: 'ap-southeast-2'});
 const lambda = new AWS.Lambda();
 
-const args = process.argv.slice(2);
+module.exports.handler = async (event, context) => {
 
-const FUNCTION_NAME = args[0]
-const CONCURRENCY = args[1] || 0
+    const fn = event.pathParameters['fn'];
+    const concurrency = event.queryStringParameters['concurrency'] || 0;
 
-const params = {
-    FunctionName: FUNCTION_NAME,
-    ReservedConcurrentExecutions: CONCURRENCY
+    const params = {
+        FunctionName: fn,
+        ReservedConcurrentExecutions: concurrency
+    };
+
+    console.log(params);
+
+    try {
+        const data = await lambda.putFunctionConcurrency(params).promise();
+
+        console.log(data);
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify(data),
+        };
+
+    } catch(err) {
+
+        return {
+            statusCode: 500,
+            body: JSON.stringify(err),
+        };
+    }
+
 };
-
-lambda.putFunctionConcurrency(params, function(err, data) {
-    if (err) console.log(err, err.stack);
-    else     console.log(data);
-});
