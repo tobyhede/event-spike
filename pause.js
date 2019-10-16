@@ -5,7 +5,6 @@ const lambda = new AWS.Lambda();
 
 const args = process.argv.slice(2);
 
-
 const FUNCTION_NAME = args[0]
 const CONCURRENCY = args[1] || 0
 
