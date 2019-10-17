@@ -8,7 +8,7 @@ const lambda = new AWS.Lambda();
 module.exports.handler = async (event, context) => {
 
     const fn = event.pathParameters['fn'];
-    const concurrency = event.queryStringParameters['concurrency'] || 0;
+    const concurrency = event.queryStringParameters && event.queryStringParameters['concurrency'] || 0;
 
     const params = {
         FunctionName: fn,

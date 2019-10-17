@@ -23,4 +23,14 @@ node pause.js event-spike-dev-sqs
 
 ## Resume function
 node pause.js event-spike-dev-sqs 1
+
+```
+
+
+```
+# Pause via HTTP
+https://{DOMAIN}/dev/{FUNCTION_NAME}/pause
+
+# Resume via HTTP
+https://{DOMAIN}/dev/{FUNCTION_NAME}/pause?concurrency=1
 ```
